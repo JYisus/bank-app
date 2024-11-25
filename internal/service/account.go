@@ -49,7 +49,6 @@ func (s AccountService) CreateAccount(ctx context.Context, owner string, initial
 }
 
 func (s AccountService) GetAccount(ctx context.Context, id string) (*internal.Account, error) {
-	// Check if initial balance is valid (> 0, only 2 decimals)
 	account, err := s.accountsRepository.Get(ctx, id)
 	if err != nil {
 		return nil, err

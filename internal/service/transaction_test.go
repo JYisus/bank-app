@@ -56,6 +56,11 @@ func TestTransactionsService_SaveTransaction(t *testing.T) {
 			txType:        internal.TxDeposit,
 			expectedError: &internal.ErrAccountNotFound{},
 		},
+		"Invalid transaction type": {
+			account:       nil,
+			txType:        "unknown",
+			expectedError: &internal.ErrInvalidValue{},
+		},
 	}
 
 	for testName, tc := range testCases {

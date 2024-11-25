@@ -1,6 +1,8 @@
 package internal
 
-import "time"
+import (
+	"time"
+)
 
 // TODO: use int?
 type TransactionType string
@@ -9,6 +11,15 @@ const (
 	TxDeposit    = "deposit"
 	TxWithdrawal = "withdrawal"
 )
+
+func NewTransactionType(txType string) (TransactionType, error) {
+	switch txType {
+	case TxDeposit, TxWithdrawal:
+		return TransactionType(txType), nil
+	}
+
+	return "", ErrInvalidValue{Msg: "invalid transaction type"}
+}
 
 type Transaction struct {
 	ID        string          `json:"id"`
@@ -19,10 +30,15 @@ type Transaction struct {
 }
 
 func NewTransaction(id, accountID, txType string, amount float32, timestamp time.Time) (Transaction, error) {
+	transactionType, err := NewTransactionType(txType)
+	if err != nil {
+		return Transaction{}, err
+	}
+
 	return Transaction{
 		ID:        id,
 		AccountID: accountID,
-		Type:      TransactionType(txType),
+		Type:      transactionType,
 		Amount:    amount,
 		Timestamp: timestamp,
 	}, nil

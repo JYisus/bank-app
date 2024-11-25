@@ -176,6 +176,9 @@ func processError(w http.ResponseWriter, err error) {
 		// NOTE: I'm using 403 here beacuse it common in this context, but I'm not sure if it's the best fit
 		http.Error(w, err.Error(), http.StatusForbidden)
 		return
+	case errors.As(err, &internal.ErrInvalidValue{}):
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	default:
 		slog.Error("Internal server error", "error", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
